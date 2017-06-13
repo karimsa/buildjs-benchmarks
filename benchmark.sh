@@ -5,7 +5,7 @@
 export PATH="$PATH:./node_modules/.bin"
 
 # set the number of iterations
-export MAX_ITERATIONS=1000
+export MAX_ITERATIONS=500
 
 # set tools
 export TOOLS=(gulp grunt fly brunch)
@@ -41,6 +41,7 @@ for tool in ${TOOLS[@]}; do
 done
 
 # show stats
+echo ""
 echo "  ############################"
 echo "  # RESULTS                  #"
 echo "  ############################"
