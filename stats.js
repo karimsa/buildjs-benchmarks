@@ -4,6 +4,8 @@
  * @copyright 2017 Karim Alibhai.
  */
 
+'use strict'
+
 const fs = require('fs')
 const chalk = require('chalk')
 const solver = require('solver')
