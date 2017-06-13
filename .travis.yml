@@ -10,4 +10,4 @@ matrix:
 install:
  - npm install
  - for i in {gulp,grunt,fly,brunch}; do npm install; done
-script: benchmark.sh
+script: ./benchmark.sh
