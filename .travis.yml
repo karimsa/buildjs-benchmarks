@@ -10,7 +10,7 @@ matrix:
 install:
  - npm install
  - bash -c 'for i in *; do if [ -d "$i" ]; then cd $i; npm i; cd ..; fi; done'
-script: "node bench.js"
+script: "node bootstrap.js"
 deploy:
   provider: releases
   api_key:
