@@ -10,8 +10,13 @@ export MAX_ITERATIONS=1000
 # set tools
 export TOOLS=(gulp grunt fly brunch)
 
+# create directory for logs
+mkdir -p build
+
 # cleanup
 function cleanup() {
+  zip -r build.zip build
+  rm -rf build
   kill ${PIDS[@]} &>/dev/null || echo ""
 }
 
@@ -21,7 +26,7 @@ trap cleanup EXIT
 for tool in ${TOOLS[@]}; do
   cd $tool
 
-  npm i
+  npm i -d &>../build/npm-$tool.log
 
   rm -rf src dist
   mkdir -p src/{css,js} dist
@@ -32,13 +37,7 @@ for tool in ${TOOLS[@]}; do
 
   cd ..
 
-  ./benchone.sh $tool &
-  PIDS+=($!)
-done
-
-# wait for benchmarks
-for pid in ${PIDS[@]}; do
-  wait $pid
+  ./benchone.sh $tool >build/build-$tool.log
 done
 
 # show stats

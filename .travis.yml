@@ -7,4 +7,15 @@ matrix:
   allow_failures:
   - node_js: 8
   - node_js: stable
-script: ./benchmark.sh
+script: "./benchmark.sh"
+deploy:
+  provider: releases
+  api_key:
+    secure: gdVSFg6J+FzcRrBrkqi3Wt3rY+Ab6cCeQgPiMJlwt6+ApS0wbvCrOPQtgMKI5vIWvINep7/vuroUGXnzPGgtdqQbNBIhfnyB3TGXtp5cAGehvZtDf+I99Rbs/2spJl2qDBvz12HTs+IJmE46NQqRmKJvmQ2ouWzdEI5rysAKC2BZ92gmStzAIrlVet3ECnfVZqvew2Q2NWpiCZ/dG9vVum2L57sz5MBiMSiIjWmHdQ69xFp6Ov6k+9RShm3jnHCn/2rYu6Omqs04AsX5GZ/CH9YoVqBTDQWUtxmlpYttwQutjSg296viNrupiFx0C8ROoj5AjMRIet5WMo/Wn7m1nf55MJ6bT9ZCm2u9TRzPLj8zlXqZ5i34m/6nbbjwHeHTm/t8OlQcdjYnX2MdLjJ+lQ7sNxTn5F38ACJ981lnsnSM7ua8rZyTO88ecFS4ZkOvFmFdYM0pWN/6jdPLZM0ssY/usy+yXPKdf2Hex5W/bFe5l/BwCsd1n2mAz1e+NTk6xSL/Dw8/2aE4ZOGYfC4/L3g/j/j5hg1x90SPhV06sf2GoE8NM8Rn1duIUIeA7RfGmKZmdmrOYtpqYw0+LrEcnYxl3Q+rIZgxxiP4Kg8iZ/kZObD7Rh+oVsZHXzhYaZZqJMWYJGHCNC2/K50xysppJP5ai+uJpijClMWQtPFOGsE=
+  file: build.zip
+  on:
+    repo: karimsa/buildjs-benchmarks
+addons:
+  apt:
+    packages:
+    - zip

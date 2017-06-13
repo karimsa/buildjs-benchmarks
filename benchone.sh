@@ -16,6 +16,16 @@ if [ "$(node -e 'console.log(require("os").platform())')" == "darwin" ]; then
   DATE="gdate" # assuming this is installed
 fi
 
+# replicate chars
+function dup() {
+  for ((i=0;i<$2;i++)); do
+    echo -n "$1"
+  done
+}
+
+# set progress bar size
+export PBAR_SIZE=30
+
 # run benchmarks
 for ((i=0;i<MAX_ITERATIONS;i++)); do
   start=$($DATE +"%s%N")
@@ -30,6 +40,10 @@ for ((i=0;i<MAX_ITERATIONS;i++)); do
   fi
 
   # keep track
-  echo "#$i: $[dur] ns"
+  echo "[$tool] #$i: $dur ns"
   echo $dur >> bench.log
+
+  # print progress
+  n=$(awk "BEGIN { printf(\"%.0f\n\", ($i/$MAX_ITERATIONS)*$PBAR_SIZE) }")
+  echo -ne "benchmarking $tool: [$(dup '#' $n)$(dup ' ' $[PBAR_SIZE-n])]$(dup ' ' 20)\r" >&2
 done
