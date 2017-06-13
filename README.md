@@ -1,4 +1,4 @@
-# JS Build Tools Benchmarks 
+# JS Build Tools Benchmarks [![Build Status](https://travis-ci.org/karimsa/buildjs-benchmarks.svg?branch=master)](https://travis-ci.org/karimsa/buildjs-benchmarks)
 
 | To see the latest benchmarks, click the travis badge above.
 
