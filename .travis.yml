@@ -10,6 +10,9 @@ matrix:
 install:
  - npm install
  - bash -c 'for i in *; do if [ -d "$i" ]; then cd $i; for j in *; do cd $j; npm i; cd ..; done; cd ..; fi; done'
+cache:
+  directories:
+  - $HOME/.npm
 script: "node bootstrap.js"
 deploy:
   provider: releases
