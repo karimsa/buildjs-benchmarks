@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "buildjs-benchmarks",
+  "version": "0.0.1",
+  "author": "Karim Alibhai",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "chalk": "^1.1.3",
+    "concurrently": "^3.4.0",
+    "jquery": "^3.2.1",
+    "solver": "0.0.2"
+  }
+}
