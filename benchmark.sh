@@ -5,7 +5,7 @@
 export PATH="$PATH:./node_modules/.bin"
 
 # set the number of iterations
-export MAX_ITERATIONS=10
+export MAX_ITERATIONS=1000
 
 # set tools
 export TOOLS=(gulp grunt fly brunch)
