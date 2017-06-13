@@ -1,5 +1,5 @@
-*/node_modules
-*/dist
+src
+dist
 node_modules
 *.log
 build

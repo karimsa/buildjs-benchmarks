@@ -9,7 +9,7 @@ matrix:
   - node_js: stable
 install:
  - npm install
- - bash -c 'for i in *; do if [ -d "$i" ]; then cd $i; npm i; cd ..; fi; done'
+ - bash -c 'for i in *; do if [ -d "$i" ]; then cd $i; for j in *; do cd $j; npm i; cd ..; done; cd ..; fi; done'
 script: "node bootstrap.js"
 deploy:
   provider: releases

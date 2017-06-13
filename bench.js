@@ -1,10 +1,9 @@
 const { exec: _exec } = require('child_process')
 const { exists, readFile, writeFile } = require('mz/fs')
-const { mkdirSync: mkdir, createWriteStream } = require('fs')
+const { mkdirSync: mkdir, createWriteStream, readFileSync, writeFileSync } = require('fs')
 const { sync: rf } = require('rimraf')
 const asar = require('asar')
 const Benchmkark = require('benchmark')
-const suite = new Benchmkark.Suite()
 
 /**
  * Cleanup & create sandbox.
@@ -31,6 +30,7 @@ function defer(fn) {
     fn().then(
       prom.resolve.bind(prom),
       err => {
+        err = err || new Error('Something went wrong.')
         console.error(err.stack || err)
         process.exit(-1)
       }
@@ -39,14 +39,21 @@ function defer(fn) {
 }
 
 /**
+ * Synchronous file copy.
+ */
+function cp(src, dist) {
+  writeFileSync(dist, readFileSync(src, 'utf8'))
+}
+
+/**
  * async child_process.exec - different from the mz/
  * implementation. this one gives me stderr separate
  * from stdout.
  */
-function exec(tool, args) {
+function exec(test, tool, args, logs) {
   return new Promise((resolve, reject) => {
     const child = _exec(`node_modules/.bin/${tool} ${args}`, {
-      cwd: `${__dirname}/${tool}`
+      cwd: `${__dirname}/${test}/${tool}`
     })
     const { stderr, stdout } = child
 
@@ -63,47 +70,103 @@ function exec(tool, args) {
 }
 
 /**
- * Add test runner for each tool & use streams
- * for log management to decrease overhead.
+ * Cache and load args for build commands.
  */
-const logs = {}
+const args = {}
 
-for (let tool of tools) {
-  logs[tool] = createWriteStream(`${__dirname}/build/build-${tool}.log`)
+async function getArgs(test, tool) {
+  const key = test + '-' + tool
 
-  suite.add(tool, defer(async () => {
-    const argsFile = `${__dirname}/${tool}/args`
-    const args = await exists(argsFile) ? await readFile(argsFile) : ''
+  if (args.hasOwnProperty(key)) {
+    return args[key]
+  }
 
-    await exec(tool, args)
-  }), {
-    defer: true
+  const argsFile = `${__dirname}/${test}/${tool}/args`
+  return (args[key] = await exists(argsFile) ? await readFile(argsFile) : '')
+}
+
+/**
+ * Runs single test.
+ */
+function run( test ) {
+  return new Promise((resolve, reject) => {
+    mkdir(`${__dirname}/build/${test}`)
+
+    const suite = new Benchmkark.Suite()
+    const logs = {}
+
+    /**
+     * Add test runner for each tool & use streams
+     * for log management to decrease overhead.
+     */
+    for (let tool of tools) {
+      rf(`${__dirname}/${test}/${tool}/src`)
+
+      mkdir(`${__dirname}/${test}/${tool}/src`)
+      mkdir(`${__dirname}/${test}/${tool}/src/js`)
+      mkdir(`${__dirname}/${test}/${tool}/src/css`)
+
+      cp(`${__dirname}/node_modules/jquery/dist/jquery.js`, `${__dirname}/${test}/${tool}/src/js/jquery.js`)
+      cp(`${__dirname}/node_modules/bootstrap/dist/js/bootstrap.js`, `${__dirname}/${test}/${tool}/src/js/bootstrap.js`)
+      cp(`${__dirname}/node_modules/bootstrap/dist/css/bootstrap.css`, `${__dirname}/${test}/${tool}/src/css/bootstrap.css`)
+
+      logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`)
+
+      suite.add(tool, defer(async () => {
+        await exec(test, tool, await getArgs(test, tool), logs)
+      }), {
+        defer: true
+      })
+    }
+
+    /**
+     * Run the benchmarks.
+     */
+    console.log('%s:\n', test)
+
+    suite
+      .on('cycle', evt => console.log(String(evt.target)))
+      .on('complete', function () {
+        console.log('')
+        console.log('Fastest is ' + this.filter('fastest').map('name'))
+
+        /**
+         * Close all logs, since we're about to zip & end.
+         */
+        for (let tool in logs) {
+          if (logs.hasOwnProperty(tool)) {
+            logs[tool].end()
+          }
+        }
+
+        /**
+         * Next test.
+         */
+        resolve()
+      })
+      .run({ 'async': true })
   })
 }
 
 /**
- * Run the benchmarks.
+ * Run individual tests.
  */
-suite
-  .on('cycle', evt => console.log(String(evt.target)))
-  .on('complete', function () {
-    console.log('')
-    console.log('Fastest is ' + this.filter('fastest').map('name'))
+;(async () => {
+  const tests = [
+    'simple'
+  ]
 
-    /**
-     * Close all logs, since we're about to zip & end.
-     */
-    for (let tool in logs) {
-      if (logs.hasOwnProperty(tool)) {
-        logs[tool].end()
-      }
-    }
-
-    /**
-     * Create log package for release.
-     */
-    asar.createPackage(`${__dirname}/build`, 'build.asar', () => {
-      // do nothing - node should exit
-    })
+  for (let test of tests) {
+    await run(test)
+  }
+})().then(() => {
+  /**
+   * Create log package for release.
+   */
+  asar.createPackage(`${__dirname}/build`, 'build.asar', () => {
+    // do nothing - node should exit
   })
-  .run({ 'async': true })
+}).catch(err => {
+  console.error(err.stack || err)
+  process.exit(-1)
+})
