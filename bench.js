@@ -2,6 +2,7 @@ const { exec: _exec } = require('child_process')
 const { exists, readFile, writeFile } = require('mz/fs')
 const { mkdirSync: mkdir, createWriteStream } = require('fs')
 const { sync: rf } = require('rimraf')
+const asar = require('asar')
 const Benchmkark = require('benchmark')
 const suite = new Benchmkark.Suite()
 
@@ -89,10 +90,20 @@ suite
     console.log('')
     console.log('Fastest is ' + this.filter('fastest').map('name'))
 
+    /**
+     * Close all logs, since we're about to zip & end.
+     */
     for (let tool in logs) {
       if (logs.hasOwnProperty(tool)) {
         logs[tool].end()
       }
     }
+
+    /**
+     * Create log package for release.
+     */
+    asar.createPackage(`${__dirname}/build`, 'build.asar', () => {
+      // do nothing - node should exit
+    })
   })
   .run({ 'async': true })

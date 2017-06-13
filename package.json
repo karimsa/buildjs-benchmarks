@@ -5,6 +5,7 @@
   "author": "Karim Alibhai",
   "license": "MIT",
   "dependencies": {
+    "asar": "^0.13.0",
     "benchmark": "^2.1.4",
     "bootstrap": "^3.3.7",
     "chalk": "^1.1.3",
