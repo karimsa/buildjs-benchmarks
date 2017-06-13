@@ -14,6 +14,8 @@ export TOOLS=(gulp grunt fly brunch)
 for tool in ${TOOLS[@]}; do
   cd $tool
 
+  npm i
+
   rm -rf src dist
   mkdir -p src/{css,js} dist
 
