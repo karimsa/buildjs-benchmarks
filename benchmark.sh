@@ -10,6 +10,13 @@ export MAX_ITERATIONS=10
 # set tools
 export TOOLS=(gulp grunt fly brunch)
 
+# cleanup
+function cleanup() {
+  kill ${PIDS[@]} &>/dev/null || echo ""
+}
+
+trap cleanup EXIT
+
 # add common files
 for tool in ${TOOLS[@]}; do
   cd $tool
