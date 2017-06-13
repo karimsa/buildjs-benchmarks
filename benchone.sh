@@ -26,6 +26,9 @@ function dup() {
 # set progress bar size
 export PBAR_SIZE=30
 
+# enable stack trace for brunch
+export LOGGY_STACKS=true
+
 # run benchmarks
 for ((i=0;i<MAX_ITERATIONS;i++)); do
   start=$($DATE +"%s%N")

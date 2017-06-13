@@ -37,7 +37,7 @@ for tool in ${TOOLS[@]}; do
 
   cd ..
 
-  ./benchone.sh $tool >build/build-$tool.log
+  ./benchone.sh $tool >build/build-$tool.log || (cat build/build-$tool.log; exit 1)
 done
 
 # show stats
