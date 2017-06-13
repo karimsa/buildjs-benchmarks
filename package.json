@@ -6,6 +6,9 @@
   "license": "MIT",
   "dependencies": {
     "asar": "^0.13.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.5.2",
+    "babel-register": "^6.24.1",
     "benchmark": "^2.1.4",
     "bootstrap": "^3.3.7",
     "chalk": "^1.1.3",
