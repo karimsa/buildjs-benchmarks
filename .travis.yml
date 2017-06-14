@@ -9,8 +9,10 @@ matrix:
   - node_js: stable
 install:
  - export NODE_ENV=production
+ - export TESTS="simple"
+ - export TOOLS="gulp grunt fly brunch"
+ - echo $TESTS | tr ' ' '\n' | while read test; do cd $test; echo $TOOLS | tr ' ' '\n' | while read tool; do cd $tool; npm i >/dev/null; cd ..; done; cd ..; done
  - npm i >/dev/null
- - bash -c 'for i in *; do if [ -d "$i" ]; then cd $i; for j in *; do cd $j; npm i >/dev/null; cd ..; done; cd ..; fi; done'
 cache:
   directories:
   - $HOME/.npm
