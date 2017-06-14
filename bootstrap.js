@@ -1,3 +1,2 @@
-require('babel-register')
-require('babel-polyfill')
-require('./bench')
+require('regenerator-runtime/runtime')
+require('./bench.dist')
