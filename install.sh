@@ -42,7 +42,7 @@ for i in $(echo $TOOLS | tr ' ' '\n'); do
 
   # find lines of code
   length=0
-  for file in $(find . | grep '.js' | sed '/node_modules/d'); do
+  for file in $(find . | grep '.js' | sed -E '/node_modules|dist|src|package/d'); do
     if [ -f "$file" ]; then
       n=$(cat -n $file | tail -n 1 | tr '\t' ' ' | tr -s ' ' | cut -d\  -f2)
       length=$[length+n]
@@ -66,10 +66,10 @@ echo ""
 echo "Dependency counts for $test:"
 cat $log/$test-deps.log
 echo ""
-echo "$depMinB is the most 'lightweight' (in terms of dependencies)."
+echo "The most 'lightweight' setup is via $depMinB (in terms of dependencies)."
 
 echo ""
 echo "Code (lines) count for $test:"
 cat $log/$test-lines.log
 echo ""
-echo "$codeMinB is the most 'lightweight' (in terms of lines of code)."
+echo "The most 'lightweight' setup is via $codeMinB (in terms of lines of code)."
