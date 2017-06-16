@@ -11,7 +11,7 @@ mkdir -p $log
 
 cd $1
 
-rm -f $log/$test-deps.log $log/$test-lines.log
+rm -f $log/$test.deps.log $log/$test.lines.log
 
 depMinA="100000"
 depMinB="nobody"
@@ -32,7 +32,7 @@ for i in $(echo $TOOLS | tr ' ' '\n'); do
   dep=$[dep-1]
 
   # add to log
-  echo " - $i: $dep total dependencies." >> $log/$test-deps.log
+  echo " - $i: $dep total dependencies." >> $log/$test.deps.log
 
   # update min
   if [ "$dep" -le "$depMinA" ]; then
@@ -50,7 +50,7 @@ for i in $(echo $TOOLS | tr ' ' '\n'); do
   done
 
   # add to log
-  echo " - $i: $length total lines of code." >> $log/$test-lines.log
+  echo " - $i: $length total lines of code." >> $log/$test.lines.log
 
   # update min
   if [ "$length" -le "$codeMinA" ]; then
@@ -62,14 +62,20 @@ for i in $(echo $TOOLS | tr ' ' '\n'); do
 done
 
 # log
-echo ""
-echo "Dependency counts for $test:"
-cat $log/$test-deps.log
-echo ""
-echo "The most 'lightweight' setup is via $depMinB (in terms of dependencies)."
+cat > $log/$test.deps.log.tmp << _EOF
+Dependency counts for $test:
+$(cat $log/$test.deps.log)
 
-echo ""
-echo "Code (lines) count for $test:"
-cat $log/$test-lines.log
-echo ""
-echo "The most 'lightweight' setup is via $codeMinB (in terms of lines of code)."
+The most 'lightweight' setup is via $depMinB (in terms of dependencies).
+_EOF
+
+cat > $log/$test.lines.log.tmp << _EOF
+
+Code (lines) count for $test:
+$(cat $log/$test.lines.log)
+
+The most 'lightweight' setup is via $codeMinB (in terms of lines of code).
+_EOF
+
+mv $log/$test.deps.log.tmp $log/$test.deps.log
+mv $log/$test.lines.log.tmp $log/$test.lines.log

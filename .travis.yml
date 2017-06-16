@@ -16,7 +16,10 @@ install:
 cache:
   directories:
   - $HOME/.npm
-script: "node bootstrap.js"
+script:
+ - echo $TESTS | tr ' ' '\n' | while read test; do cat build/$test.deps.log; done
+ - echo $TESTS | tr ' ' '\n' | while read test; do cat build/$test.lines.log; done
+ - "node bootstrap.js"
 deploy:
   provider: releases
   api_key:
