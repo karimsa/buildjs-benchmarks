@@ -11,8 +11,8 @@ install:
  - export NODE_ENV=production
  - export TESTS="simple"
  - export TOOLS="gulp grunt fly brunch"
- - echo $TESTS | tr ' ' '\n' | while read test; do ./install.sh $test; done
  - npm i >/dev/null
+ - echo $TESTS | tr ' ' '\n' | while read test; do ./install.sh $test; done
 cache:
   directories:
   - $HOME/.npm

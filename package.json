@@ -10,6 +10,7 @@
   "dependencies": {
     "asar": "^0.13.0",
     "babel-polyfill": "^6.23.0",
+    "babili": "^0.1.3",
     "benchmark": "^2.1.4",
     "bootstrap": "^3.3.7",
     "chalk": "^1.1.3",

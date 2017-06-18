@@ -44,13 +44,14 @@ for i in $(echo $TOOLS | tr ' ' '\n'); do
   length=0
   for file in $(find . | grep '.js' | sed -E '/node_modules|dist|src|package/d'); do
     if [ -f "$file" ]; then
-      n=$(cat -n $file | tail -n 1 | tr '\t' ' ' | tr -s ' ' | cut -d\  -f2)
+      n=$($dirname/node_modules/.bin/babili $file | wc -c)
+      n=$[n+0]
       length=$[length+n]
     fi
   done
 
   # add to log
-  echo " - $i: $length total lines of code." >> $log/$test.lines.log
+  echo " - $i: $length total chars of code." >> $log/$test.lines.log
 
   # update min
   if [ "$length" -le "$codeMinA" ]; then
@@ -71,10 +72,10 @@ _EOF
 
 cat > $log/$test.lines.log.tmp << _EOF
 
-Code (lines) count for $test:
+Code (characters) count for $test:
 $(cat $log/$test.lines.log)
 
-The most 'lightweight' setup is via $codeMinB (in terms of lines of code).
+The most 'lightweight' setup is via $codeMinB (in terms of chars of code).
 _EOF
 
 mv $log/$test.deps.log.tmp $log/$test.deps.log
