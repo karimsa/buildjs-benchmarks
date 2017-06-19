@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 cd $(dirname $0)
 dirname="$PWD"
@@ -20,46 +20,48 @@ codeMinA="100000"
 codeMinB="nobody"
 
 for i in $(echo $TOOLS | tr ' ' '\n'); do
-  cd $i
+  if [ -x "$PWD/$i" ]; then
+    cd $i
 
-  # start with silent-ish install
-  npm i >/dev/null
+    # start with silent-ish install
+    npm i >/dev/null
 
-  # figure out dependency count
-  dep=$(npm ls | cat -n | tail -n 1 | tr -s ' ' | cut -d\  -f2)
+    # figure out dependency count
+    dep=$(npm ls | cat -n | tail -n 1 | tr -s ' ' | cut -d\  -f2)
 
-  # get rid of number for newline
-  dep=$[dep-1]
+    # get rid of number for newline
+    dep=$[dep-1]
 
-  # add to log
-  echo " - $i: $dep total dependencies." >> $log/$test.deps.log
+    # add to log
+    echo " - $i: $dep total dependencies." >> $log/$test.deps.log
 
-  # update min
-  if [ "$dep" -le "$depMinA" ]; then
-    depMinA="$dep"
-    depMinB="$i"
-  fi
-
-  # find lines of code
-  length=0
-  for file in $(find . | grep '.js' | sed -E '/node_modules|dist|src|package/d'); do
-    if [ -f "$file" ]; then
-      n=$($dirname/node_modules/.bin/babili $file | wc -c)
-      n=$[n+0]
-      length=$[length+n]
+    # update min
+    if [ "$dep" -le "$depMinA" ]; then
+      depMinA="$dep"
+      depMinB="$i"
     fi
-  done
 
-  # add to log
-  echo " - $i: $length total chars of code." >> $log/$test.lines.log
+    # find lines of code
+    length=0
+    for file in $(find . | grep '.js' | sed -E '/node_modules|dist|src|package/d'); do
+      if [ -f "$file" ]; then
+        n=$($dirname/node_modules/.bin/babili $file | wc -c)
+        n=$[n+0]
+        length=$[length+n]
+      fi
+    done
 
-  # update min
-  if [ "$length" -le "$codeMinA" ]; then
-    codeMinA="$length"
-    codeMinB="$i"
+    # add to log
+    echo " - $i: $length total chars of code." >> $log/$test.lines.log
+
+    # update min
+    if [ "$length" -le "$codeMinA" ]; then
+      codeMinA="$length"
+      codeMinB="$i"
+    fi
+
+    cd ..
   fi
-
-  cd ..
 done
 
 # log
