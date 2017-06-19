@@ -139,181 +139,188 @@ var args = {};
 function run(test) {
   var _this = this;
 
-  return new Promise(function (resolve, reject) {
-    mkdir(`${__dirname}/build/${test}`);
+  return new Promise(function () {
+    var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(resolve, reject) {
+      var suite, logs, _loop, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, tool;
 
-    var suite = new Benchmkark.Suite();
-    var logs = {};
+      return regeneratorRuntime.wrap(function _callee3$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              mkdir(`${__dirname}/build/${test}`);
 
-    console.log('%s:\n', test
+              suite = new Benchmkark.Suite();
+              logs = {};
 
-    /**
-     * Add test runner for each tool & use streams
-     * for log management to decrease overhead.
-     */
-    );
-    var _loop = function _loop(tool) {
-      var blacklist = readFileSync(`${__dirname}/${test}/blacklist`, 'utf8').split(/\r?\n/g);
 
-      if (blacklist.indexOf(tool) === -1) {
-        logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`);
+              console.log('%s:\n', test
 
-        suite.add(tool, defer(_asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
-          return regeneratorRuntime.wrap(function _callee2$(_context2) {
-            while (1) {
-              switch (_context2.prev = _context2.next) {
-                case 0:
-                  _context2.t0 = exec;
-                  _context2.t1 = test;
-                  _context2.t2 = tool;
-                  _context2.next = 5;
-                  return getArgs(test, tool);
+              /**
+               * Add test runner for each tool & use streams
+               * for log management to decrease overhead.
+               */
+              );_loop = regeneratorRuntime.mark(function _loop(tool) {
+                var blacklist;
+                return regeneratorRuntime.wrap(function _loop$(_context3) {
+                  while (1) {
+                    switch (_context3.prev = _context3.next) {
+                      case 0:
+                        blacklist = [];
+                        _context3.next = 3;
+                        return exists(`${__dirname}/${test}/blacklist`);
 
-                case 5:
-                  _context2.t3 = _context2.sent;
-                  _context2.t4 = logs;
-                  _context2.next = 9;
-                  return (0, _context2.t0)(_context2.t1, _context2.t2, _context2.t3, _context2.t4);
+                      case 3:
+                        if (!_context3.sent) {
+                          _context3.next = 7;
+                          break;
+                        }
 
-                case 9:
-                case 'end':
-                  return _context2.stop();
+                        _context3.next = 6;
+                        return readFile(`${__dirname}/${test}/blacklist`, 'utf8');
+
+                      case 6:
+                        blacklist = _context3.sent.split(/\r?\n/g);
+
+                      case 7:
+
+                        if (blacklist.indexOf(tool) === -1) {
+                          logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`);
+
+                          suite.add(tool, defer(_asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+                            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                              while (1) {
+                                switch (_context2.prev = _context2.next) {
+                                  case 0:
+                                    _context2.t0 = exec;
+                                    _context2.t1 = test;
+                                    _context2.t2 = tool;
+                                    _context2.next = 5;
+                                    return getArgs(test, tool);
+
+                                  case 5:
+                                    _context2.t3 = _context2.sent;
+                                    _context2.t4 = logs;
+                                    _context2.next = 9;
+                                    return (0, _context2.t0)(_context2.t1, _context2.t2, _context2.t3, _context2.t4);
+
+                                  case 9:
+                                  case 'end':
+                                    return _context2.stop();
+                                }
+                              }
+                            }, _callee2, _this);
+                          }))), {
+                            defer: true
+                          });
+                        } else {
+                          console.log('%s is not capable of this test', tool);
+                        }
+
+                      case 8:
+                      case 'end':
+                        return _context3.stop();
+                    }
+                  }
+                }, _loop, _this);
+              });
+              _iteratorNormalCompletion = true;
+              _didIteratorError = false;
+              _iteratorError = undefined;
+              _context4.prev = 8;
+              _iterator = tools[Symbol.iterator]();
+
+            case 10:
+              if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+                _context4.next = 16;
+                break;
               }
-            }
-          }, _callee2, _this);
-        }))), {
-          defer: true
-        });
-      } else {
-        console.log('%s is not capable of this test', tool);
-      }
+
+              tool = _step.value;
+              return _context4.delegateYield(_loop(tool), 't0', 13);
+
+            case 13:
+              _iteratorNormalCompletion = true;
+              _context4.next = 10;
+              break;
+
+            case 16:
+              _context4.next = 22;
+              break;
+
+            case 18:
+              _context4.prev = 18;
+              _context4.t1 = _context4['catch'](8);
+              _didIteratorError = true;
+              _iteratorError = _context4.t1;
+
+            case 22:
+              _context4.prev = 22;
+              _context4.prev = 23;
+
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+
+            case 25:
+              _context4.prev = 25;
+
+              if (!_didIteratorError) {
+                _context4.next = 28;
+                break;
+              }
+
+              throw _iteratorError;
+
+            case 28:
+              return _context4.finish(25);
+
+            case 29:
+              return _context4.finish(22);
+
+            case 30:
+
+              /**
+               * Run the benchmarks.
+               */
+              suite.on('cycle', function (evt) {
+                return console.log(String(evt.target));
+              }).on('complete', function () {
+                console.log('');
+                console.log('Fastest is ' + this.filter('fastest').map('name')
+
+                /**
+                 * Close all logs, since we're about to zip & end.
+                 */
+                );for (var tool in logs) {
+                  if (logs.hasOwnProperty(tool)) {
+                    logs[tool].end();
+                  }
+                }
+
+                /**
+                 * Next test.
+                 */
+                resolve();
+              }).run({ 'async': true });
+
+            case 31:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, _callee3, _this, [[8, 18, 22, 30], [23,, 25, 29]]);
+    }));
+
+    return function (_x3, _x4) {
+      return _ref2.apply(this, arguments);
     };
-
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = tools[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var tool = _step.value;
-
-        _loop(tool);
-      }
-
-      /**
-       * Run the benchmarks.
-       */
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
-    }
-
-    suite.on('cycle', function (evt) {
-      return console.log(String(evt.target));
-    }).on('complete', function () {
-      console.log('');
-      console.log('Fastest is ' + this.filter('fastest').map('name')
-
-      /**
-       * Close all logs, since we're about to zip & end.
-       */
-      );for (var tool in logs) {
-        if (logs.hasOwnProperty(tool)) {
-          logs[tool].end();
-        }
-      }
-
-      /**
-       * Next test.
-       */
-      resolve();
-    }).run({ 'async': true });
-  });
+  }());
 }
 
 /**
- * Run individual tests.
+ * Run test.
  */
-;_asyncToGenerator(regeneratorRuntime.mark(function _callee3() {
-  var tests, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, test;
-
-  return regeneratorRuntime.wrap(function _callee3$(_context3) {
-    while (1) {
-      switch (_context3.prev = _context3.next) {
-        case 0:
-          tests = process.env.TESTS.split(' ');
-          _iteratorNormalCompletion2 = true;
-          _didIteratorError2 = false;
-          _iteratorError2 = undefined;
-          _context3.prev = 4;
-          _iterator2 = tests[Symbol.iterator]();
-
-        case 6:
-          if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
-            _context3.next = 13;
-            break;
-          }
-
-          test = _step2.value;
-          _context3.next = 10;
-          return run(test);
-
-        case 10:
-          _iteratorNormalCompletion2 = true;
-          _context3.next = 6;
-          break;
-
-        case 13:
-          _context3.next = 19;
-          break;
-
-        case 15:
-          _context3.prev = 15;
-          _context3.t0 = _context3['catch'](4);
-          _didIteratorError2 = true;
-          _iteratorError2 = _context3.t0;
-
-        case 19:
-          _context3.prev = 19;
-          _context3.prev = 20;
-
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
-          }
-
-        case 22:
-          _context3.prev = 22;
-
-          if (!_didIteratorError2) {
-            _context3.next = 25;
-            break;
-          }
-
-          throw _iteratorError2;
-
-        case 25:
-          return _context3.finish(22);
-
-        case 26:
-          return _context3.finish(19);
-
-        case 27:
-        case 'end':
-          return _context3.stop();
-      }
-    }
-  }, _callee3, undefined, [[4, 15, 19, 27], [20,, 22, 26]]);
-}))().then(function () {
+run(process.env.TEST).then(function () {
   /**
    * Create log package for release.
    */

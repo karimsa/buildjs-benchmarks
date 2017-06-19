@@ -77,7 +77,7 @@ async function getArgs(test, tool) {
  * Runs single test.
  */
 function run( test ) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     mkdir(`${__dirname}/build/${test}`)
 
     const suite = new Benchmkark.Suite()
@@ -90,7 +90,11 @@ function run( test ) {
      * for log management to decrease overhead.
      */
     for (let tool of tools) {
-      const blacklist = readFileSync(`${__dirname}/${test}/blacklist`, 'utf8').split(/\r?\n/g)
+      let blacklist = []
+
+      if (await exists(`${__dirname}/${test}/blacklist`)) {
+        blacklist = (await readFile(`${__dirname}/${test}/blacklist`, 'utf8')).split(/\r?\n/g)
+      }
 
       if (blacklist.indexOf(tool) === -1) {
         logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`)
@@ -133,15 +137,9 @@ function run( test ) {
 }
 
 /**
- * Run individual tests.
+ * Run test.
  */
-;(async () => {
-  const tests = process.env.TESTS.split(' ')
-
-  for (let test of tests) {
-    await run(test)
-  }
-})().then(() => {
+run(process.env.TEST).then(() => {
   /**
    * Create log package for release.
    */
