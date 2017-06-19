@@ -1,7 +1,7 @@
 #!/bin/bash
 
 N=1000
-M=100
+M=10
 
 # get proper dirname
 cd $(dirname $0)
