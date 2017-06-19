@@ -83,25 +83,31 @@ function run( test ) {
     const suite = new Benchmkark.Suite()
     const logs = {}
 
+    console.log('%s:\n', test)
+
     /**
      * Add test runner for each tool & use streams
      * for log management to decrease overhead.
      */
     for (let tool of tools) {
-      logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`)
+      const blacklist = readFileSync(`${__dirname}/${test}/blacklist`, 'utf8').split(/\r?\n/g)
 
-      suite.add(tool, defer(async () => {
-        await exec(test, tool, await getArgs(test, tool), logs)
-      }), {
-        defer: true
-      })
+      if (blacklist.indexOf(tool) === -1) {
+        logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`)
+
+        suite.add(tool, defer(async () => {
+          await exec(test, tool, await getArgs(test, tool), logs)
+        }), {
+          defer: true
+        })
+      } else {
+        console.log('%s is not capable of this test', tool)
+      }
     }
 
     /**
      * Run the benchmarks.
      */
-    console.log('%s:\n', test)
-
     suite
       .on('cycle', evt => console.log(String(evt.target)))
       .on('complete', function () {

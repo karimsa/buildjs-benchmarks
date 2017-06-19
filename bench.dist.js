@@ -145,40 +145,48 @@ function run(test) {
     var suite = new Benchmkark.Suite();
     var logs = {};
 
+    console.log('%s:\n', test
+
     /**
      * Add test runner for each tool & use streams
      * for log management to decrease overhead.
      */
-
+    );
     var _loop = function _loop(tool) {
-      logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`);
+      var blacklist = readFileSync(`${__dirname}/${test}/blacklist`, 'utf8').split(/\r?\n/g);
 
-      suite.add(tool, defer(_asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.t0 = exec;
-                _context2.t1 = test;
-                _context2.t2 = tool;
-                _context2.next = 5;
-                return getArgs(test, tool);
+      if (blacklist.indexOf(tool) === -1) {
+        logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`);
 
-              case 5:
-                _context2.t3 = _context2.sent;
-                _context2.t4 = logs;
-                _context2.next = 9;
-                return (0, _context2.t0)(_context2.t1, _context2.t2, _context2.t3, _context2.t4);
+        suite.add(tool, defer(_asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  _context2.t0 = exec;
+                  _context2.t1 = test;
+                  _context2.t2 = tool;
+                  _context2.next = 5;
+                  return getArgs(test, tool);
 
-              case 9:
-              case 'end':
-                return _context2.stop();
+                case 5:
+                  _context2.t3 = _context2.sent;
+                  _context2.t4 = logs;
+                  _context2.next = 9;
+                  return (0, _context2.t0)(_context2.t1, _context2.t2, _context2.t3, _context2.t4);
+
+                case 9:
+                case 'end':
+                  return _context2.stop();
+              }
             }
-          }
-        }, _callee2, _this);
-      }))), {
-        defer: true
-      });
+          }, _callee2, _this);
+        }))), {
+          defer: true
+        });
+      } else {
+        console.log('%s is not capable of this test', tool);
+      }
     };
 
     var _iteratorNormalCompletion = true;
@@ -209,8 +217,6 @@ function run(test) {
         }
       }
     }
-
-    console.log('%s:\n', test);
 
     suite.on('cycle', function (evt) {
       return console.log(String(evt.target));
