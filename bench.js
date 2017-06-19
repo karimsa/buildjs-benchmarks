@@ -1,6 +1,6 @@
 const { exec: _exec } = require('child_process')
-const { exists, readFile, writeFile } = require('mz/fs')
-const { mkdirSync: mkdir, createWriteStream, readFileSync, writeFileSync } = require('fs')
+const { exists, readFile } = require('mz/fs')
+const { mkdirSync: mkdir, createWriteStream, readFileSync } = require('fs')
 const { sync: rf } = require('rimraf')
 const asar = require('asar')
 const Benchmkark = require('benchmark')
@@ -36,13 +36,6 @@ function defer(fn) {
       }
     )
   }
-}
-
-/**
- * Synchronous file copy.
- */
-function cp(src, dist) {
-  writeFileSync(dist, readFileSync(src, 'utf8'))
 }
 
 /**
@@ -100,16 +93,6 @@ function run( test ) {
      * for log management to decrease overhead.
      */
     for (let tool of tools) {
-      rf(`${__dirname}/${test}/${tool}/src`)
-
-      mkdir(`${__dirname}/${test}/${tool}/src`)
-      mkdir(`${__dirname}/${test}/${tool}/src/js`)
-      mkdir(`${__dirname}/${test}/${tool}/src/css`)
-
-      cp(`${__dirname}/node_modules/jquery/dist/jquery.js`, `${__dirname}/${test}/${tool}/src/js/jquery.js`)
-      cp(`${__dirname}/node_modules/bootstrap/dist/js/bootstrap.js`, `${__dirname}/${test}/${tool}/src/js/bootstrap.js`)
-      cp(`${__dirname}/node_modules/bootstrap/dist/css/bootstrap.css`, `${__dirname}/${test}/${tool}/src/css/bootstrap.css`)
-
       logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`)
 
       suite.add(tool, defer(async () => {

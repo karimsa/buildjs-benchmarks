@@ -66,14 +66,12 @@ var _require = require('child_process'),
 
 var _require2 = require('mz/fs'),
     exists = _require2.exists,
-    readFile = _require2.readFile,
-    writeFile = _require2.writeFile;
+    readFile = _require2.readFile;
 
 var _require3 = require('fs'),
     mkdir = _require3.mkdirSync,
     createWriteStream = _require3.createWriteStream,
-    readFileSync = _require3.readFileSync,
-    writeFileSync = _require3.writeFileSync;
+    readFileSync = _require3.readFileSync;
 
 var _require4 = require('rimraf'),
     rf = _require4.sync;
@@ -104,13 +102,6 @@ function defer(fn) {
       process.exit(-1);
     });
   };
-}
-
-/**
- * Synchronous file copy.
- */
-function cp(src, dist) {
-  writeFileSync(dist, readFileSync(src, 'utf8'));
 }
 
 /**
@@ -160,16 +151,6 @@ function run(test) {
      */
 
     var _loop = function _loop(tool) {
-      rf(`${__dirname}/${test}/${tool}/src`);
-
-      mkdir(`${__dirname}/${test}/${tool}/src`);
-      mkdir(`${__dirname}/${test}/${tool}/src/js`);
-      mkdir(`${__dirname}/${test}/${tool}/src/css`);
-
-      cp(`${__dirname}/node_modules/jquery/dist/jquery.js`, `${__dirname}/${test}/${tool}/src/js/jquery.js`);
-      cp(`${__dirname}/node_modules/bootstrap/dist/js/bootstrap.js`, `${__dirname}/${test}/${tool}/src/js/bootstrap.js`);
-      cp(`${__dirname}/node_modules/bootstrap/dist/css/bootstrap.css`, `${__dirname}/${test}/${tool}/src/css/bootstrap.css`);
-
       logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`);
 
       suite.add(tool, defer(_asyncToGenerator(regeneratorRuntime.mark(function _callee2() {

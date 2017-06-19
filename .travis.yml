@@ -13,6 +13,7 @@ install:
  - export TOOLS="gulp grunt fly brunch"
  - npm i >/dev/null
  - echo $TESTS | tr ' ' '\n' | while read test; do ./install.sh $test; done
+ - echo $TESTS | tr ' ' '\n' | while read test; do ${test}/setup.sh; done
 cache:
   directories:
   - $HOME/.npm
