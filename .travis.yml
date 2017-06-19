@@ -1,25 +1,24 @@
 language: node_js
-matrix:
-  include:
-  - node_js: 4
-  - node_js: 6
-  - node_js: 7
-  allow_failures:
-  - node_js: 8
-  - node_js: stable
+node_js:
+ - 4
+ - 7
+env:
+ - TEST="simple"
+ - TEST="tons.of.files"
+ - TEST="big.file"
+ - TEST="tons.of.big.files"
 install:
  - export NODE_ENV=production
- - export TESTS="simple tons.of.files big.file tons.of.big.files"
  - export TOOLS="gulp grunt fly brunch"
  - npm i >/dev/null
- - echo $TESTS | tr ' ' '\n' | while read test; do ./install.sh $test; done
- - echo $TESTS | tr ' ' '\n' | while read test; do ${test}/setup.sh; done
+ - ./install.sh $TEST
+ - ${TEST}/setup.sh
 cache:
   directories:
   - $HOME/.npm
 script:
- - echo $TESTS | tr ' ' '\n' | while read test; do cat build/$test.deps.log; done
- - echo $TESTS | tr ' ' '\n' | while read test; do cat build/$test.lines.log; done
+ - cat build/${TEST}.deps.log
+ - cat build/${TEST}.lines.log
  - "node bootstrap.js"
 deploy:
   provider: releases
