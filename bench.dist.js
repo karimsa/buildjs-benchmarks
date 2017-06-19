@@ -88,13 +88,13 @@ mkdir(`${__dirname}/build`
 /**
  * Easily configurable to add tools.
  */
-);var tools = ['gulp', 'grunt', 'fly', 'brunch'];
+);var tools = process.env.TOOLS.split(' '
 
 /**
  * Wraps up an async function into the
  * deferred-style used by benchmarkjs.
  */
-function defer(fn) {
+);function defer(fn) {
   return function (prom) {
     fn().then(prom.resolve.bind(prom), function (err) {
       err = err || new Error('Something went wrong.');
@@ -245,7 +245,7 @@ function run(test) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          tests = ['simple'];
+          tests = process.env.TESTS.split(' ');
           _iteratorNormalCompletion2 = true;
           _didIteratorError2 = false;
           _iteratorError2 = undefined;

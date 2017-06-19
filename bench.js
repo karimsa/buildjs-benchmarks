@@ -14,12 +14,7 @@ mkdir(`${__dirname}/build`)
 /**
  * Easily configurable to add tools.
  */
-const tools = [
-  'gulp',
-  'grunt',
-  'fly',
-  'brunch'
-]
+const tools = process.env.TOOLS.split(' ')
 
 /**
  * Wraps up an async function into the
@@ -135,9 +130,7 @@ function run( test ) {
  * Run individual tests.
  */
 ;(async () => {
-  const tests = [
-    'simple'
-  ]
+  const tests = process.env.TESTS.split(' ')
 
   for (let test of tests) {
     await run(test)
