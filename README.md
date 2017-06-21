@@ -1,6 +1,6 @@
 # JS Build Tools Benchmarks [![Build Status](https://travis-ci.org/karimsa/buildjs-benchmarks.svg?branch=master)](https://travis-ci.org/karimsa/buildjs-benchmarks)
 
-| To see the latest results, click the travis badge above.
+> To see the latest results, click the travis badge above.
 
 This repository is meant to display the automated benchmarks
 of the various build tools available to JS users. The only major
