@@ -9,7 +9,7 @@ env:
  - TEST="tons.of.big.files"
 install:
  - export NODE_ENV=production
- - export TOOLS="gulp grunt fly brunch"
+ - export TOOLS="gulp grunt taskr brunch"
  - npm i >/dev/null
  - ./install.sh $TEST
  - ${TEST}/setup.sh
