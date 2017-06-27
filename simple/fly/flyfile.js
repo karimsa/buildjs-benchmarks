@@ -1,11 +1,11 @@
 module.exports = {
-	*js(f) {
-		yield f.source('src/js/*.js').target('dist/js')
+	*js(fly) {
+		yield fly.source('src/js/*.js').target('dist/js')
 	},
-	*css(f) {
-		yield f.source('src/css/*.css').target('dist/css')
+	*css(fly) {
+		yield fly.source('src/css/*.css').target('dist/css')
 	},
-	*default(f) {
-		yield f.parallel(['js', 'css'])
+	*default(fly) {
+		yield fly.parallel(['js', 'css'])
 	}
 }

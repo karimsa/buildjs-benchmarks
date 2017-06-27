@@ -1,3 +1,3 @@
-exports.default = function* (f) {
-	yield f.source('src/js/*.js').target('dist/js')
+exports.default = function* (fly) {
+	yield fly.source('src/js/*.js').target('dist/js')
 }
