@@ -3,7 +3,7 @@
     "prestart": "rm -rf dist",
     "start": "broccoli build dist"
   },
-  "devDependencies": {
+  "dependencies": {
     "broccoli": "^1.1.2",
     "broccoli-cli": "^1.0.0",
     "broccoli-funnel": "^1.2.0"
