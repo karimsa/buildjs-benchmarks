@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "brunch build"
+  },
   "dependencies": {
     "brunch": "^2.10.9"
   }
