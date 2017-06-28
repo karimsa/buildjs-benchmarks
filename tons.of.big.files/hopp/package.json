@@ -1,5 +1,8 @@
 {
+  "scripts": {
+    "start": "hopp"
+  },
   "dependencies": {
-    "hopp": "git+https://github.com/hoppjs/hopp.git"
+    "hopp": "*"
   }
 }
