@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "start": "gulp"
+    "start": "taskr"
   },
   "dependencies": {
-    "gulp": "^3.9.1"
+    "taskr": "^1.0.5"
   }
 }

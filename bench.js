@@ -38,9 +38,9 @@ function defer(fn) {
  * implementation. this one gives me stderr separate
  * from stdout.
  */
-function exec(test, tool, args, logs) {
+function exec(test, tool, logs) {
   return new Promise((resolve, reject) => {
-    const child = _exec(`node_modules/.bin/${tool} ${args}`, {
+    const child = _exec(`npm start`, {
       cwd: `${__dirname}/${test}/${tool}`
     })
     const { stderr, stdout } = child
@@ -55,22 +55,6 @@ function exec(test, tool, args, logs) {
       else resolve()
     })
   })
-}
-
-/**
- * Cache and load args for build commands.
- */
-const args = {}
-
-async function getArgs(test, tool) {
-  const key = test + '-' + tool
-
-  if (args.hasOwnProperty(key)) {
-    return args[key]
-  }
-
-  const argsFile = `${__dirname}/${test}/${tool}/args`
-  return (args[key] = await exists(argsFile) ? await readFile(argsFile) : '')
 }
 
 /**
@@ -99,9 +83,7 @@ function run( test ) {
       if (blacklist.indexOf(tool) === -1) {
         logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`)
 
-        suite.add(tool, defer(async () => {
-          await exec(test, tool, await getArgs(test, tool), logs)
-        }), {
+        suite.add(tool, defer(async () => exec(test, tool, logs)), {
           defer: true
         })
       } else {

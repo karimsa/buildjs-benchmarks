@@ -5,7 +5,7 @@
   "author": "Karim Alibhai",
   "license": "MIT",
   "scripts": {
-    "build": "babel bench.js -o bench.dist.js"
+    "build": "babel bench.js -o bench.dist.js --source-maps"
   },
   "dependencies": {
     "asar": "^0.13.0",
