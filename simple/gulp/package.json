@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "gulp"
+  },
   "dependencies": {
     "gulp": "^3.9.1"
   }

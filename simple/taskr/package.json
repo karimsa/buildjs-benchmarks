@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "taskr"
+  },
   "dependencies": {
     "taskr": "^1.0.5"
   }
