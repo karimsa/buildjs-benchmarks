@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "hopp"
+  },
+  "dependencies": {
+    "hopp": "^1.0.0"
+  }
+}

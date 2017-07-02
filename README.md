@@ -18,6 +18,7 @@ acts as a build tool by accident.
  - fly
  - brunch
  - broccoli
+ - hopp
 
 *Please open an issue to discuss additions to this list.*
 
