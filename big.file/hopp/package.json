@@ -3,6 +3,6 @@
     "start": "hopp"
   },
   "dependencies": {
-    "hopp": "*"
+    "hopp": "^1.0.0"
   }
 }
