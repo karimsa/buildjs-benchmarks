@@ -83,7 +83,7 @@ function run( test ) {
       if (blacklist.indexOf(tool) === -1) {
         logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`)
 
-        suite.add(tool, defer(async () => exec(test, tool, logs)), {
+        suite.add(`${tool} (v${require(`${__dirname}/${test}/${tool}/node_modules/${tool}/package.json`).version})`, defer(async () => exec(test, tool, logs)), {
           defer: true
         })
       } else {

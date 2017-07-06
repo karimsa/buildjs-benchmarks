@@ -125,7 +125,7 @@ function run(test) {
                         if (blacklist.indexOf(tool) === -1) {
                           logs[tool] = createWriteStream(`${__dirname}/build/${test}/build-${tool}.log`);
 
-                          suite.add(tool, defer(_asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+                          suite.add(`${tool} (v${require(`${__dirname}/${test}/${tool}/node_modules/${tool}/package.json`).version})`, defer(_asyncToGenerator(regeneratorRuntime.mark(function _callee() {
                             return regeneratorRuntime.wrap(function _callee$(_context) {
                               while (1) {
                                 switch (_context.prev = _context.next) {
